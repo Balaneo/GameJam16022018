@@ -17,6 +17,11 @@ public class GameManager : MonoBehaviour {
 
 	GameStateEnum gameState;
 
+	void Awake()
+	{
+		DontDestroyOnLoad (this.gameObject);
+	}
+
 	// Use this for initialization
 	void Start () 
 	{
