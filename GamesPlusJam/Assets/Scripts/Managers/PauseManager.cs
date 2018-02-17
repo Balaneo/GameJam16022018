@@ -9,35 +9,17 @@ using UnityEditor;
 
 public class PauseManager : MonoBehaviour {
 
-	private CanvasGroup pauseCanvas;
-	private bool gamePaused;
+	public bool gamePaused;
 
-	// Use this for initialization
-	void Start () 
+	public void SetPause(bool paused)
 	{
-		pauseCanvas = GetComponent<CanvasGroup> ();
-
-		if (pauseCanvas)
-		{
-			pauseCanvas.alpha = 0.0f;
-		}
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-		print ("Updating");
-
-		if(Input.GetButtonDown("Pause"))
-		{
-			Pause ();
-		}			
-	}
-
-	public void Pause()
-	{
-		gamePaused = !gamePaused;
+		gamePaused = paused;
 		Time.timeScale = gamePaused ? 0.0f : 1.0f;
-		pauseCanvas.alpha = gamePaused ? 1.0f : 0.0f;
+	}
+
+	public bool isPaused()
+	{
+		print (gamePaused);
+		return gamePaused;
 	}
 }
