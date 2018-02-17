@@ -663,7 +663,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1512184878}
-        m_MethodName: Options
+        m_MethodName: Pause
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1154,6 +1154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cfde14c6f6184c4a93722e8f882cebd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 1512184878}
   loadingText: {fileID: 151904423}
   hintText: {fileID: 1530964871}
   loadingHints:

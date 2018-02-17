@@ -207,7 +207,6 @@ public class UIManager : MonoBehaviour {
 
 	public void StartGame()
 	{
-		loadingCanvas.GetComponent<LoadingScreen> ().OnLoaded += RemoveLoadingScreen;
 		loadingCanvas.GetComponent<LoadingScreen> ().LoadNewScene (1);
 		SwitchScreen (currentScreen, UIScreensEnum.Loading);
 	}
@@ -231,12 +230,11 @@ public class UIManager : MonoBehaviour {
 
 	public void Cancel()
 	{
-		if (previousScreen != UIScreensEnum.Paused && previousScreen != UIScreensEnum.Loading)
+		if (currentScreen == UIScreensEnum.Paused)
 		{
-			if (currentScreen == UIScreensEnum.Paused)
-			{
-				pauseCanvas.GetComponent<PauseManager> ().SetPause (false);
-			}
+			Unpause ();
+		} else
+		{
 			SwitchScreen (currentScreen, previousScreen);
 		}
 	}

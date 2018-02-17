@@ -9,16 +9,15 @@ public class LoadingScreen : MonoBehaviour {
 	private int scene;
 	private bool loadingScene;
 
+	[Header("Manager")]
+	public UIManager manager;
+
 	[Header("Loading")]
 	public Text loadingText;
 
 	[Header("Hints")]
 	public Text hintText;
 	public string[] loadingHints;
-
-	public delegate void LoadLevel();
-	public event LoadLevel OnLoaded;
-
 
 	void Update()
 	{
@@ -37,6 +36,8 @@ public class LoadingScreen : MonoBehaviour {
 		scene = newScene;
 		loadingScene = true;
 		StartCoroutine (StartLoading());
+
+		SceneManager.sceneLoaded += OnSceneLoaded;
 	}
 
 	IEnumerator StartLoading()
@@ -48,11 +49,14 @@ public class LoadingScreen : MonoBehaviour {
 		while (!async.isDone)
 		{
 			yield return null;
-		}
+		}			
+	}
 
-		if (OnLoaded != null)
-		{
-			OnLoaded ();
-		}
+	void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+	{
+
+		print ("Loaded scene: " + scene.name);		
+		manager.RemoveLoadingScreen ();
+		SceneManager.sceneLoaded -= OnSceneLoaded;
 	}
 }
