@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour {
+public class GameController : MonoBehaviour {
 
 	public enum GameStateEnum
 	{
@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		print ("I am the game manager!");
+		
 	}
 	
 	// Update is called once per frame

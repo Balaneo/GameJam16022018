@@ -9,13 +9,23 @@ public class FadeTransition : MonoBehaviour {
 
 	private float fadeTimeCurrent;
 
-	public float fadeTimeMax = 2.0f;
+	public float fadeTimeMax = 3.0f;
 
-	private Image fadeImage;
+	private CanvasGroup canvasGroup;
 
 	void Start()
 	{
-		fadeImage = GetComponentInChildren<Image> ();
+		canvasGroup = GetComponent<CanvasGroup> ();
+
+		if (FadeOn)
+		{
+			fadeTimeCurrent = fadeTimeMax;
+		} else
+		{
+			fadeTimeCurrent = 0.0f;
+		}
+
+		SetFadeAmount();
 	}
 
 	// Update is called once per frame
@@ -26,7 +36,7 @@ public class FadeTransition : MonoBehaviour {
 			if (fadeTimeCurrent < fadeTimeMax)
 			{
 				fadeTimeCurrent = Mathf.Clamp(fadeTimeCurrent + Time.deltaTime, 0.0f, fadeTimeMax);
-				fadeImage.color = Color.Lerp(new Color(0.0f, 0.0f, 0.0f, 0.0f), new Color (0.0f, 0.0f, 0.0f, 1.0f), fadeTimeCurrent / fadeTimeMax);
+				SetFadeAmount();
 			}
 		} 
 		else
@@ -34,18 +44,26 @@ public class FadeTransition : MonoBehaviour {
 			if (fadeTimeCurrent > 0.0f)
 			{
 				fadeTimeCurrent = Mathf.Clamp(fadeTimeCurrent - Time.deltaTime, 0.0f, fadeTimeMax);
-				fadeImage.color = Color.Lerp (new Color(0.0f, 0.0f, 0.0f, 0.0f), new Color (0.0f, 0.0f, 0.0f, 1.0f), fadeTimeCurrent / fadeTimeMax);
+				SetFadeAmount();
 			}
 		}
 	}
 
-	void StartFade()
+	public void StartFade()
 	{
 		FadeOn = true;
 	}
 
-	void StopFade()
+	public void StopFade()
 	{
 		FadeOn = false;
+	}
+
+	private void SetFadeAmount()
+	{
+		if (canvasGroup)
+		{
+			canvasGroup.alpha = Mathf.Lerp (0.0f, 1.0f, Mathf.Pow(fadeTimeCurrent / fadeTimeMax, 5.0f));
+		}
 	}
 }
