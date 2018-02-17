@@ -6,6 +6,7 @@ public class GameController : MonoBehaviour {
 
 	public enum GameStateEnum
 	{
+		None,
 		Menu,
 		Loading,
 		Initialised,
@@ -15,7 +16,9 @@ public class GameController : MonoBehaviour {
 		PostGame
 	};
 
-	GameStateEnum gameState;
+	GameStateEnum gameState = GameStateEnum.None;
+
+	UIManager uiManager;
 
 	void Awake()
 	{
@@ -25,7 +28,15 @@ public class GameController : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		
+		uiManager = GameObject.FindGameObjectWithTag ("UIManager").GetComponent<UIManager> ();
+
+		if (uiManager)
+		{
+			print ("Found UI Manager");
+			SetCurrentGameState (GameStateEnum.Menu);
+			uiManager.SwitchScreen (UIManager.UIScreensEnum.None, UIManager.UIScreensEnum.MainMenu);
+		}
+
 	}
 	
 	// Update is called once per frame
@@ -57,11 +68,5 @@ public class GameController : MonoBehaviour {
 	public bool HasInitialised()
 	{
 		return (GetCurrentGameState () >= GameStateEnum.Initialised);
-	}
-
-
-	public void ExitGame()
-	{
-		Application.Quit ();
 	}
 }
