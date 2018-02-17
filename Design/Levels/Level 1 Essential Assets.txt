@@ -1,0 +1,30 @@
+ASSET LIST:
+
+Study:
+
+Study Desk
+Study Chair
+Fireplace
+Painting
+Drawers
+Bookshelves
+Hidden Painting Chest
+
+Library:
+
+Bookshelves
+Tables
+Chairs
+Books
+Piles of Books
+
+Storage Room:
+
+Boxes
+Chests
+Key (can be hidden inside a chest if we want)
+
+Hallway:
+
+Candles
+Torches
