@@ -19,7 +19,6 @@ public class PauseManager : MonoBehaviour {
 
 	public bool isPaused()
 	{
-		print (gamePaused);
 		return gamePaused;
 	}
 }

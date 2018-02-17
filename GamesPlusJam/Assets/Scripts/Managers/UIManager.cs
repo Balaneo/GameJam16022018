@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour {
 	public Canvas optionsCanvas;
 	public Canvas pauseCanvas;
 	public Canvas loadingCanvas;
+	public Canvas exitGame;
 	public Canvas hudCanvas;
 
 	public enum UIScreensEnum
@@ -19,9 +20,11 @@ public class UIManager : MonoBehaviour {
 		MainMenu,
 		Options,
 		Paused,
-		Loading
+		Loading,
+		ExitGame,
 	};
 
+	[Header("Runtime Screens")]
 	public UIScreensEnum currentScreen = UIScreensEnum.None;
 	public UIScreensEnum previousScreen = UIScreensEnum.None;
 
@@ -55,66 +58,70 @@ public class UIManager : MonoBehaviour {
 
 		if(Input.GetButtonDown("Pause"))
 		{
-			pauseCanvas.GetComponent<PauseManager> ().SetPause (pauseCanvas.GetComponent<PauseManager> ().isPaused () ? false : true);
-			SwitchScreen (	pauseCanvas.GetComponent<PauseManager> ().isPaused () ? currentScreen : UIScreensEnum.Paused,
-							pauseCanvas.GetComponent<PauseManager> ().isPaused () ? UIScreensEnum.Paused : previousScreen);
+			if(pauseCanvas.GetComponent<PauseManager>().isPaused())
+			{
+				Unpause();
+			} else
+			{
+				Pause();
+			}
 		}
 
 		if(Input.GetButtonDown("Cancel"))
 		{
-			if (previousScreen != UIScreensEnum.Paused && previousScreen != UIScreensEnum.Loading)
-			{
-				if (currentScreen == UIScreensEnum.Paused)
-				{
-					pauseCanvas.GetComponent<PauseManager> ().SetPause (false);
-				}
-				SwitchScreen (currentScreen, previousScreen);
-			}
+			Cancel ();
 		}		
+	}
 
-		if(Input.GetKeyDown(KeyCode.L))
-		{			
-			loadingCanvas.GetComponent<LoadingScreen> ().StartLoading ();
-			SwitchScreen (currentScreen, UIScreensEnum.Loading);
-		}
-
-		if(Input.GetKeyDown(KeyCode.M))
-		{			
-			SwitchScreen (currentScreen, UIScreensEnum.MainMenu);
-		}		
+	private void SetScreenEnabled(Canvas canvas, bool enabled)
+	{
+		canvas.GetComponent<CanvasGroup> ().alpha = enabled ? 1 : 0;
+		canvas.GetComponent<CanvasGroup> ().interactable = enabled;
+		canvas.GetComponent<CanvasGroup> ().blocksRaycasts = enabled;
 	}
 
 	public void SwitchScreen (UIScreensEnum oldScreen, UIScreensEnum newScreen)
 	{
+
+
+
 		//Hide old screen
 		switch (oldScreen)
 		{
 		case UIScreensEnum.None:
 
+			previousScreen = UIScreensEnum.None;
 			break;
 
 		case UIScreensEnum.MainMenu:
 
 			previousScreen = UIScreensEnum.MainMenu;
-			mainMenuCanvas.GetComponent<CanvasGroup> ().alpha = 0.0f;
+			SetScreenEnabled (mainMenuCanvas, false);
 			break;
 
 		case UIScreensEnum.Options:
 
 			previousScreen = UIScreensEnum.Options;
-			optionsCanvas.GetComponent<CanvasGroup> ().alpha = 0.0f;
+			SetScreenEnabled (optionsCanvas, false);
 			break;
 
 		case UIScreensEnum.Paused:
 
+			print ("Hiding Pause Screen");
 			previousScreen = UIScreensEnum.Paused;
-			pauseCanvas.GetComponent<CanvasGroup> ().alpha = 0.0f;
+			SetScreenEnabled (pauseCanvas, false);
 			break;
 
 		case UIScreensEnum.Loading:
 
 			previousScreen = UIScreensEnum.Loading;
-			loadingCanvas.GetComponent<CanvasGroup> ().alpha = 0.0f;
+			SetScreenEnabled (loadingCanvas, false);
+			break;
+
+		case UIScreensEnum.ExitGame:
+
+			previousScreen = UIScreensEnum.ExitGame;
+			SetScreenEnabled (exitGame, false);
 			break;
 
 		default:
@@ -129,30 +136,38 @@ public class UIManager : MonoBehaviour {
 		{
 		case UIScreensEnum.None:
 
+			currentScreen = UIScreensEnum.None;
 			break;
 
 		case UIScreensEnum.MainMenu:
 
 			currentScreen = UIScreensEnum.MainMenu;
-			mainMenuCanvas.GetComponent<CanvasGroup> ().alpha = 1.0f;
+			SetScreenEnabled (mainMenuCanvas, true);
 			break;
 
 		case UIScreensEnum.Options:
 
 			currentScreen = UIScreensEnum.Options;
-			optionsCanvas.GetComponent<CanvasGroup> ().alpha = 1.0f;
+			SetScreenEnabled (optionsCanvas, true);
 			break;
 
 		case UIScreensEnum.Paused:
 
+			print ("Showing Pause Screen");
 			currentScreen = UIScreensEnum.Paused;
-			pauseCanvas.GetComponent<CanvasGroup> ().alpha = 1.0f;
+			SetScreenEnabled (pauseCanvas, true);
 			break;
 
 		case UIScreensEnum.Loading:
 
 			currentScreen = UIScreensEnum.Loading;
-			loadingCanvas.GetComponent<CanvasGroup> ().alpha = 1.0f;
+			SetScreenEnabled (loadingCanvas, true);
+			break;
+
+		case UIScreensEnum.ExitGame:
+
+			currentScreen = UIScreensEnum.ExitGame;
+			SetScreenEnabled (exitGame, true);
 			break;
 
 		default:
@@ -161,8 +176,7 @@ public class UIManager : MonoBehaviour {
 			break;
 		}
 	}
-
-	//
+		
 	void TriggerInitialFade()
 	{
 		if (fadeTransitionCanvas)
@@ -170,6 +184,66 @@ public class UIManager : MonoBehaviour {
 			fadeTransitionCanvas.GetComponent<FadeTransition> ().StopFade();
 			WaitingForInitialFade = false;
 		}
+	}
+
+	public void ToggleFade(bool fade)
+	{
+		if (fadeTransitionCanvas)
+		{
+			if (fade)
+			{
+				fadeTransitionCanvas.GetComponent<FadeTransition> ().StartFade ();
+			} else
+			{
+				fadeTransitionCanvas.GetComponent<FadeTransition> ().StopFade ();
+			}
+		}
+	}
+
+	public void RemoveLoadingScreen()
+	{
+		SwitchScreen (currentScreen, UIScreensEnum.None);
+	}
+
+	public void StartGame()
+	{
+		loadingCanvas.GetComponent<LoadingScreen> ().OnLoaded += RemoveLoadingScreen;
+		loadingCanvas.GetComponent<LoadingScreen> ().LoadNewScene (1);
+		SwitchScreen (currentScreen, UIScreensEnum.Loading);
+	}
+
+	public void Options()
+	{
+		SwitchScreen (currentScreen, UIScreensEnum.Options);
+	}
+
+	public void Pause()
+	{
+		pauseCanvas.GetComponent<PauseManager> ().SetPause (true);
+		SwitchScreen (currentScreen, UIScreensEnum.Paused);
+	}
+
+	public void Unpause()
+	{
+		pauseCanvas.GetComponent<PauseManager> ().SetPause (false);
+		SwitchScreen (currentScreen, UIScreensEnum.None);
+	}
+
+	public void Cancel()
+	{
+		if (previousScreen != UIScreensEnum.Paused && previousScreen != UIScreensEnum.Loading)
+		{
+			if (currentScreen == UIScreensEnum.Paused)
+			{
+				pauseCanvas.GetComponent<PauseManager> ().SetPause (false);
+			}
+			SwitchScreen (currentScreen, previousScreen);
+		}
+	}
+
+	public void PromptExitGame ()
+	{
+		SwitchScreen (currentScreen, UIScreensEnum.ExitGame);		
 	}
 
 	public void ExitGame()
