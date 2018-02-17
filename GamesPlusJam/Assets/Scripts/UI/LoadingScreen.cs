@@ -6,11 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class LoadingScreen : MonoBehaviour {
 
-	private int scene;
+	private int newSceneIndex;
+
 	private bool loadingScene;
 
-	[Header("Manager")]
-	public UIManager manager;
+	[Header("Managers")]
+	public UIManager uiManager;
 
 	[Header("Loading")]
 	public Text loadingText;
@@ -18,6 +19,15 @@ public class LoadingScreen : MonoBehaviour {
 	[Header("Hints")]
 	public Text hintText;
 	public string[] loadingHints;
+
+
+	void Awake()
+	{
+		if (uiManager == null)
+		{
+			uiManager = UIManager.instance;
+		}
+	}
 
 	void Update()
 	{
@@ -27,13 +37,13 @@ public class LoadingScreen : MonoBehaviour {
 		}
 	}
 
-	public void LoadNewScene(int newScene) {
+	public void LoadNewScene(int sceneIndex) {
 
 		loadingText.text = "LOADING...";
 
 		hintText.text = loadingHints [Random.Range (0, loadingHints.Length)];		
 
-		scene = newScene;
+		newSceneIndex = sceneIndex;
 		loadingScene = true;
 		StartCoroutine (StartLoading());
 
@@ -42,21 +52,28 @@ public class LoadingScreen : MonoBehaviour {
 
 	IEnumerator StartLoading()
 	{
-		yield return new WaitForSeconds (3.0f);
+		yield return new WaitForSeconds (2.0f);
 
-		AsyncOperation async = SceneManager.LoadSceneAsync (scene);
+		AsyncOperation async = SceneManager.LoadSceneAsync (newSceneIndex);
 
 		while (!async.isDone)
 		{
 			yield return null;
-		}			
+		}
 	}
 
 	void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
-
-		print ("Loaded scene: " + scene.name);		
-		manager.RemoveLoadingScreen ();
+		print ("Loaded scene: " + scene.name);	
 		SceneManager.sceneLoaded -= OnSceneLoaded;
+		StartCoroutine (PostLoadDelay ());
+	}
+
+	IEnumerator PostLoadDelay()
+	{
+		yield return new WaitForSeconds (2.0f);
+
+		uiManager.RemoveLoadingScreen ();
+		loadingScene = false;
 	}
 }

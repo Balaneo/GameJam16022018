@@ -2,8 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour {
+
+	public static UIManager instance = null;
+
+	[Header("Managers")]
+	public GameController gameController = GameController.instance;
 
 	[Header("Game Canvases")]
 	public Canvas fadeTransitionCanvas;
@@ -28,24 +34,26 @@ public class UIManager : MonoBehaviour {
 	public UIScreensEnum currentScreen = UIScreensEnum.None;
 	public UIScreensEnum previousScreen = UIScreensEnum.None;
 
-	GameController gameController;
-
 	public bool WaitingForInitialFade = true;
+
 
 	void Awake()
 	{
+		if (instance == null)
+		{
+			instance = this;
+		} else if (instance != this)
+		{
+			Destroy (gameObject);
+		}
+
 		DontDestroyOnLoad (this.gameObject);
 	}
 
 	// Use this for initialization
 	void Start ()
 	{
-		gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
-
-		if (gameController)
-		{
-			print ("Found Game Controller");
-		}		
+		SwitchScreen (currentScreen, UIScreensEnum.MainMenu);
 	}
 	
 	// Update is called once per frame
@@ -200,15 +208,41 @@ public class UIManager : MonoBehaviour {
 		}
 	}
 
+	public void StartLoadingScreen(int newScene)
+	{
+		pauseCanvas.GetComponent<PauseManager> ().SetPause (false);
+		loadingCanvas.GetComponent<LoadingScreen> ().LoadNewScene (newScene);
+		SwitchScreen (currentScreen, UIScreensEnum.Loading);
+	}
+
 	public void RemoveLoadingScreen()
 	{
 		SwitchScreen (currentScreen, UIScreensEnum.None);
 	}
 
+	public void MainMenu()
+	{
+		if (SceneManager.GetSceneByBuildIndex (0).name != SceneManager.GetActiveScene ().name)
+		{
+			StartLoadingScreen (0);
+			SceneManager.sceneLoaded += MenuLoaded;
+		} else
+		{
+			SwitchScreen (currentScreen, UIScreensEnum.MainMenu);
+		}
+	}
+
+	void MenuLoaded(Scene scene, LoadSceneMode mode)
+	{
+		print ("Loaded scene: " + scene.name);		
+		RemoveLoadingScreen ();
+		SceneManager.sceneLoaded -= MenuLoaded;
+		SwitchScreen (currentScreen, UIScreensEnum.MainMenu);
+	}
+
 	public void StartGame()
 	{
-		loadingCanvas.GetComponent<LoadingScreen> ().LoadNewScene (1);
-		SwitchScreen (currentScreen, UIScreensEnum.Loading);
+		StartLoadingScreen (1);
 	}
 
 	public void Options()

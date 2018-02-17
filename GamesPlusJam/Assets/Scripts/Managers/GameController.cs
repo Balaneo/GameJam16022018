@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour {
 
+	public static GameController instance = null;
+
 	public enum GameStateEnum
 	{
 		None,
@@ -18,25 +20,20 @@ public class GameController : MonoBehaviour {
 
 	GameStateEnum gameState = GameStateEnum.None;
 
-	UIManager uiManager;
+	[Header("Managers")]
+	public UIManager uiManager = UIManager.instance;
 
 	void Awake()
 	{
-		DontDestroyOnLoad (this.gameObject);
-	}
-
-	// Use this for initialization
-	void Start () 
-	{
-		uiManager = GameObject.FindGameObjectWithTag ("UIManager").GetComponent<UIManager> ();
-
-		if (uiManager)
+		if (instance == null)
 		{
-			print ("Found UI Manager");
-			SetCurrentGameState (GameStateEnum.Menu);
-			uiManager.SwitchScreen (UIManager.UIScreensEnum.None, UIManager.UIScreensEnum.MainMenu);
+			instance = this;
+		} else if (instance != this)
+		{
+			Destroy (gameObject);
 		}
 
+		DontDestroyOnLoad (this.gameObject);
 	}
 	
 	// Update is called once per frame
@@ -52,17 +49,9 @@ public class GameController : MonoBehaviour {
 	}
 
 	// Sets the current game state, returns whether it actually changed.
-	private bool SetCurrentGameState(GameStateEnum newGameState)
+	public void SetCurrentGameState(GameStateEnum newGameState)
 	{
-		bool gameStateChanged = false;
-
-		if (newGameState != gameState)
-		{
-			gameState = newGameState;
-			gameStateChanged = true;
-		}
-
-		return gameStateChanged;
+		gameState = newGameState;
 	}
 
 	public bool HasInitialised()
