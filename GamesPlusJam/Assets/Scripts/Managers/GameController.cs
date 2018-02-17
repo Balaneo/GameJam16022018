@@ -58,4 +58,10 @@ public class GameController : MonoBehaviour {
 	{
 		return (GetCurrentGameState () >= GameStateEnum.Initialised);
 	}
+
+
+	public void ExitGame()
+	{
+		Application.Quit ();
+	}
 }

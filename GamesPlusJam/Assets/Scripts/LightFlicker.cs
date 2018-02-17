@@ -7,14 +7,13 @@ public class LightFlicker : MonoBehaviour {
 	private Light lightComponent;
 
 	[Header("Light Base")]
-	public bool enableLight = true;
-	public float lightEnableTime = 2.0f;
+	public bool enableLight;
+	public float lightEnableTime;
 	private float currentEnableTime = 0.0f;
 
-
 	[Header("Light Flicker")]
-	public bool enableFlicker = true;
-	public float flickerRate = 1.0f;
+	public bool enableFlicker;
+	public float flickerRate;
 	private float currentFlickerStrength;
 	private float targetFlickerStrength;
 	private bool getNewTargetStrength = true;
@@ -37,6 +36,7 @@ public class LightFlicker : MonoBehaviour {
 	{
 		lightComponent = GetComponent<Light> ();	
 		currentFlickerStrength = Random.Range (0.0f, 1.0f);
+		SetLightParameters ();
 	}
 	
 	// Update is called once per frame
@@ -48,47 +48,54 @@ public class LightFlicker : MonoBehaviour {
 			{
 				currentEnableTime = Mathf.Clamp (currentEnableTime + Time.deltaTime, 0.0f, lightEnableTime);
 				ToggleLight ();
-			}
-
-
-			if (getNewTargetStrength)
-			{
-				targetFlickerStrength = Random.Range (0.0f, 1.0f);
-				getNewTargetStrength = false;
 			} else
 			{
-				if (targetFlickerStrength > currentFlickerStrength)
+				if (getNewTargetStrength)
 				{
-					currentFlickerStrength = Mathf.Clamp (currentFlickerStrength + (Time.deltaTime * flickerRate), currentFlickerStrength, targetFlickerStrength);
-					SetLightParameters ();
-					
-				} else if (targetFlickerStrength < currentFlickerStrength)
-				{
-					currentFlickerStrength = Mathf.Clamp (currentFlickerStrength - (Time.deltaTime * flickerRate), targetFlickerStrength, currentFlickerStrength);
-					SetLightParameters ();
+					targetFlickerStrength = Random.Range (0.0f, 1.0f);
+					getNewTargetStrength = false;
 				} else
 				{
-					getNewTargetStrength = true;
+					if (targetFlickerStrength > currentFlickerStrength)
+					{
+						currentFlickerStrength = Mathf.Clamp (currentFlickerStrength + (Time.deltaTime * flickerRate), currentFlickerStrength, targetFlickerStrength);
+						SetLightParameters ();
+
+					} else if (targetFlickerStrength < currentFlickerStrength)
+					{
+						currentFlickerStrength = Mathf.Clamp (currentFlickerStrength - (Time.deltaTime * flickerRate), targetFlickerStrength, currentFlickerStrength);
+						SetLightParameters ();
+					} else
+					{
+						getNewTargetStrength = true;
+					}
 				}
 			}
+
 		} else
 		{
-			currentEnableTime = Mathf.Clamp (currentEnableTime + Time.deltaTime, 0.0f, lightEnableTime);
+			currentEnableTime = Mathf.Clamp (currentEnableTime - Time.deltaTime, 0.0f, lightEnableTime);
 			ToggleLight ();
 		}
 	}
 
 	void SetLightParameters()
 	{
-		lightComponent.range = Mathf.Lerp (lightRangeMin, lightRangeMax, GetFlickerAmountNormalised());
-		lightComponent.color = Color.Lerp (lightColourMin, lightColourMax, GetFlickerAmountNormalised ());
-		lightComponent.intensity = Mathf.Lerp (lightIntensityMin, lightIntensityMax, GetFlickerAmountNormalised ());
+		if (lightComponent)
+		{
+			lightComponent.range = Mathf.Lerp (lightRangeMin, lightRangeMax, GetFlickerAmountNormalised());
+			lightComponent.color = Color.Lerp (lightColourMin, lightColourMax, GetFlickerAmountNormalised ());
+			lightComponent.intensity = Mathf.Lerp (lightIntensityMin, lightIntensityMax, GetFlickerAmountNormalised ());
+		}
 	}
 
 	void ToggleLight()
 	{
-		lightComponent.range = Mathf.Lerp (0.0f, Mathf.Lerp (lightRangeMin, lightRangeMax, GetFlickerAmountNormalised()), GetDisableTimeNormalised());
-		lightComponent.intensity = Mathf.Lerp (0.0f, Mathf.Lerp (lightIntensityMin, lightIntensityMax, GetFlickerAmountNormalised ()), GetDisableTimeNormalised());
+		if (lightComponent)
+		{
+			lightComponent.range = Mathf.Lerp (0.0f, Mathf.Lerp (lightRangeMin, lightRangeMax, GetFlickerAmountNormalised()), GetDisableTimeNormalised());
+			lightComponent.intensity = Mathf.Lerp (0.0f, Mathf.Lerp (lightIntensityMin, lightIntensityMax, GetFlickerAmountNormalised ()), GetDisableTimeNormalised());
+		}
 	}
 
 	float GetFlickerAmountNormalised()
@@ -98,6 +105,6 @@ public class LightFlicker : MonoBehaviour {
 
 	float GetDisableTimeNormalised()
 	{
-		return 1.0f - currentEnableTime / lightEnableTime;
+		return currentEnableTime / lightEnableTime;
 	}
 }

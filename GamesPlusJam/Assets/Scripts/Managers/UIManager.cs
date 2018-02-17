@@ -7,6 +7,8 @@ public class UIManager : MonoBehaviour {
 
 	public Canvas fadeTransitionCanvas;
 
+	public Canvas pauseCanvas;
+
 	public bool WaitingForInitialFade = true;
 
 	void Awake()
@@ -25,11 +27,17 @@ public class UIManager : MonoBehaviour {
 	{
 		if (WaitingForInitialFade)
 		{
-			if (fadeTransitionCanvas)
-			{
-				fadeTransitionCanvas.GetComponent<FadeTransition> ().StopFade();
-				WaitingForInitialFade = false;
-			}
+			TriggerInitialFade ();
 		}		
+	}
+
+	//
+	void TriggerInitialFade()
+	{
+		if (fadeTransitionCanvas)
+		{
+			fadeTransitionCanvas.GetComponent<FadeTransition> ().StopFade();
+			WaitingForInitialFade = false;
+		}
 	}
 }
