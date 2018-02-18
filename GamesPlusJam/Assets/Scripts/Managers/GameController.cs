@@ -28,6 +28,9 @@ public class GameController : MonoBehaviour {
 	public UIManager uiManager;
 	public AudioManager audioManager;
 
+	[Header("Player")]
+	public GameObject currentPlayer;
+
 	void Awake()
 	{
 		if (instance == null)

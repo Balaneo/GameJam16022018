@@ -14,6 +14,9 @@ public class UIManager : MonoBehaviour {
 	[Header("Managers")]
 	public GameController gameController = GameController.instance;
 
+	[Header("Player")]
+	public GameObject currentPlayer;
+
 	[Header("Game Canvases")]
 	public Canvas fadeTransitionCanvas;
 	public Canvas mainMenuCanvas;
@@ -142,8 +145,7 @@ public class UIManager : MonoBehaviour {
 			break;
 
 		case UIScreensEnum.Paused:
-
-			print ("Hiding Pause Screen");
+			
 			previousScreen = UIScreensEnum.Paused;
 			SetScreenEnabled (pauseCanvas, false);
 			break;
@@ -193,8 +195,7 @@ public class UIManager : MonoBehaviour {
 			break;
 
 		case UIScreensEnum.Paused:
-
-			print ("Showing Pause Screen");
+			
 			currentScreen = UIScreensEnum.Paused;
 			SetScreenEnabled (pauseCanvas, true);
 			break;

@@ -6,6 +6,7 @@ public class PlayerSpawner : MonoBehaviour {
 
 	[Header("Managers")]
 	public GameController gameController;
+	public UIManager uiManager;
 
 	[Header("Spawn Point")]
 	public int spawnIndex;
@@ -20,6 +21,11 @@ public class PlayerSpawner : MonoBehaviour {
 
 	public void Start()
 	{
+		if (uiManager == null)
+		{
+			uiManager = UIManager.instance;
+		}
+
 		if (gameController == null)
 		{
 			gameController = GameController.instance;
@@ -37,8 +43,6 @@ public class PlayerSpawner : MonoBehaviour {
 		if (gameState == GameController.GameStateEnum.Initialised)
 		{
 			SpawnPlayer (playerTestObject);
-
-
 		}
 	}
 
@@ -47,11 +51,13 @@ public class PlayerSpawner : MonoBehaviour {
 		if (spawnedPlayerReference == null)
 		{
 			spawnedPlayerReference = Instantiate (newPlayer, new Vector3 (transform.position.x, transform.position.y + spawnHeightOffset, transform.position.z), transform.rotation);
-			print ("Spawned player at spawn point: " + spawnIndex);
 		} else
 		{
 			print ("I already have an assigned player!");
 		}
+
+		gameController.currentPlayer = spawnedPlayerReference;
+		uiManager.currentPlayer = spawnedPlayerReference;
 	}
 
 	void Update()
@@ -69,5 +75,8 @@ public class PlayerSpawner : MonoBehaviour {
 	void OnDisable()
 	{
 		GameController.OnGameStateChanged -= CheckShouldSpawnPlayer;
+
+		uiManager.currentPlayer = null;
+		gameController.currentPlayer = null;
 	}
 }

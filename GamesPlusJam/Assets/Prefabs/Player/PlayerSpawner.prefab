@@ -51,6 +51,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0951b3a6cbebe0149ada7969fce7ea4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameController: {fileID: 0}
+  uiManager: {fileID: 0}
   spawnIndex: 0
   spawnedPlayerReference: {fileID: 0}
   spawnHeightOffset: 1

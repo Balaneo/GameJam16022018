@@ -2,11 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu]
+[CreateAssetMenu(fileName = "InventoryItem", menuName="Inventory/Key Item")]
 public class InventoryItem : ScriptableObject {
 
+	[Tooltip("The name of the item show when mouse-hovered in-game.")]
 	public string itemName;
+
+	[Tooltip("The description of the item to be show in-game on an inspect window.")]
 	public string itemDescription;
+
+	[Tooltip("The image to use on the inventory slot UI in-game.")]
 	public Sprite itemIcon;
-	public GameObject itemPrefab;
+
+	[Tooltip("Whether the item is consumed when it has been used.")]
+	public bool itemConsumedOnUse;
 }

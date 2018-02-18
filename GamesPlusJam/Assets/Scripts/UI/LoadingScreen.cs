@@ -67,7 +67,6 @@ public class LoadingScreen : MonoBehaviour {
 
 	void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
-		print ("Loaded scene: " + scene.name);	
 		SceneManager.sceneLoaded -= OnSceneLoaded;
 		StartCoroutine (PostLoadDelay ());
 	}

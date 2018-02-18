@@ -22,9 +22,11 @@ GameObject:
   - component: {fileID: 54462061048217814}
   - component: {fileID: 65382751377429032}
   - component: {fileID: 114704527515674436}
+  - component: {fileID: 114296504274155434}
+  - component: {fileID: 114297665094872292}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -211,6 +213,54 @@ Behaviour:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1875041245727742}
   m_Enabled: 1
+--- !u!114 &114296504274155434
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1073222206893946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e51767336cd905241ae66dac97347ffc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentInteractionTarget: {fileID: 0}
+--- !u!114 &114297665094872292
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1073222206893946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90affd5a24dbc3d4aaea09e52c934d95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  items:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  itemNames:
+  - 
+  - 
+  - 
+  - 
+  - 
+  itemDescriptions:
+  - 
+  - 
+  - 
+  - 
+  - 
+  itemImages:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  itemConsumedOnUses: 0000000000
 --- !u!114 &114704527515674436
 MonoBehaviour:
   m_ObjectHideFlags: 1
