@@ -20,6 +20,9 @@ public class LoadingScreen : MonoBehaviour {
 	public Text hintText;
 	public string[] loadingHints;
 
+	public delegate void PostLoadDelayFinished();
+	public static event PostLoadDelayFinished OnPostLoadDelayFinished;
+
 
 	void Start()
 	{
@@ -75,5 +78,10 @@ public class LoadingScreen : MonoBehaviour {
 
 		uiManager.RemoveLoadingScreen ();
 		loadingScene = false;
+
+		if (OnPostLoadDelayFinished != null)
+		{
+			OnPostLoadDelayFinished ();
+		}
 	}
 }

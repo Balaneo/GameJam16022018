@@ -31,6 +31,7 @@ public class UIManager : MonoBehaviour {
 		Paused,
 		Loading,
 		ExitGame,
+		HUD
 	};
 
 	[Header("Runtime Screens")]
@@ -38,6 +39,7 @@ public class UIManager : MonoBehaviour {
 	public UIScreensEnum previousScreen = UIScreensEnum.None;
 
 	public bool WaitingForInitialFade = true;
+	public bool playerHUDActive = false;
 
 
 	void Awake()
@@ -60,6 +62,8 @@ public class UIManager : MonoBehaviour {
 		{
 			gameController = GameController.instance;
 		}
+
+		GameController.OnGameStateChanged += CheckIfInitialised;
 
 		SwitchScreen (currentScreen, UIScreensEnum.MainMenu);
 	}
@@ -92,6 +96,22 @@ public class UIManager : MonoBehaviour {
 		}		
 	}
 
+
+	private void CheckIfInitialised(GameController.GameStateEnum newState)
+	{
+		if (newState == GameController.GameStateEnum.Initialised)
+		{
+			LoadingScreen.OnPostLoadDelayFinished += ShowPlayerHUD;
+		}
+	}
+
+	public void ShowPlayerHUD()
+	{
+		SwitchScreen (currentScreen, UIScreensEnum.HUD);
+		gameController.SetCurrentGameState (GameController.GameStateEnum.BeforeTimer);
+	}
+
+
 	private void SetScreenEnabled(Canvas canvas, bool enabled)
 	{
 		canvas.GetComponent<CanvasGroup> ().alpha = enabled ? 1 : 0;
@@ -101,9 +121,6 @@ public class UIManager : MonoBehaviour {
 
 	public void SwitchScreen (UIScreensEnum oldScreen, UIScreensEnum newScreen)
 	{
-
-
-
 		//Hide old screen
 		switch (oldScreen)
 		{
@@ -143,12 +160,17 @@ public class UIManager : MonoBehaviour {
 			SetScreenEnabled (exitGame, false);
 			break;
 
+		case UIScreensEnum.HUD:
+
+			previousScreen = UIScreensEnum.HUD;
+			SetScreenEnabled (hudCanvas, false);
+			break;
+
 		default:
 
 			print ("Old Screen Defaulted with case: " + oldScreen);
 			break;
 		}
-
 
 		//Show new screen
 		switch (newScreen)
@@ -187,6 +209,12 @@ public class UIManager : MonoBehaviour {
 
 			currentScreen = UIScreensEnum.ExitGame;
 			SetScreenEnabled (exitGame, true);
+			break;
+
+		case UIScreensEnum.HUD:
+
+			currentScreen = UIScreensEnum.HUD;
+			SetScreenEnabled (hudCanvas, true);
 			break;
 
 		default:
@@ -230,7 +258,7 @@ public class UIManager : MonoBehaviour {
 
 	public void RemoveLoadingScreen()
 	{
-		SwitchScreen (currentScreen, UIScreensEnum.None);
+		SwitchScreen (UIScreensEnum.Loading, UIScreensEnum.None);
 	}
 
 	public void MainMenu()
@@ -248,8 +276,12 @@ public class UIManager : MonoBehaviour {
 	void MenuLoaded(Scene scene, LoadSceneMode mode)
 	{
 		print ("Loaded scene: " + scene.name);		
-		RemoveLoadingScreen ();
 		SceneManager.sceneLoaded -= MenuLoaded;
+		LoadingScreen.OnPostLoadDelayFinished += MenuPostLoadFinished;
+	}
+
+	void MenuPostLoadFinished()
+	{
 		SwitchScreen (currentScreen, UIScreensEnum.MainMenu);
 	}
 
@@ -272,7 +304,7 @@ public class UIManager : MonoBehaviour {
 	public void Unpause()
 	{
 		pauseCanvas.GetComponent<PauseManager> ().SetPause (false);
-		SwitchScreen (currentScreen, UIScreensEnum.None);
+		SwitchScreen (currentScreen, UIScreensEnum.HUD);
 	}
 
 	public void Cancel()

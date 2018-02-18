@@ -37,7 +37,8 @@ public class PlayerSpawner : MonoBehaviour {
 		if (gameState == GameController.GameStateEnum.Initialised)
 		{
 			SpawnPlayer (playerTestObject);
-			gameController.SetCurrentGameState (GameController.GameStateEnum.BeforeTimer);
+
+
 		}
 	}
 
@@ -62,5 +63,11 @@ public class PlayerSpawner : MonoBehaviour {
 				SpawnPlayer(playerTestObject);
 			}
 		}
+	}
+
+
+	void OnDisable()
+	{
+		GameController.OnGameStateChanged -= CheckShouldSpawnPlayer;
 	}
 }
