@@ -21,7 +21,7 @@ public class LoadingScreen : MonoBehaviour {
 	public string[] loadingHints;
 
 
-	void Awake()
+	void S()
 	{
 		if (uiManager == null)
 		{

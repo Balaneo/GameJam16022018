@@ -1,10 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour {
 
 	public static GameController instance = null;
+
+	public delegate void GameStateChanged(GameStateEnum newState);
+	public static event GameStateChanged  OnGameStateChanged;
 
 	public enum GameStateEnum
 	{
@@ -18,10 +22,11 @@ public class GameController : MonoBehaviour {
 		PostGame
 	};
 
-	GameStateEnum gameState = GameStateEnum.None;
+	public GameStateEnum gameState;
 
 	[Header("Managers")]
-	public UIManager uiManager = UIManager.instance;
+	public UIManager uiManager;
+	public AudioManager audioManager;
 
 	void Awake()
 	{
@@ -35,11 +40,44 @@ public class GameController : MonoBehaviour {
 
 		DontDestroyOnLoad (this.gameObject);
 	}
-	
-	// Update is called once per frame
-	void Update () 
+
+	void Start()
 	{
-		
+		if (uiManager == null)
+		{
+			uiManager = UIManager.instance;
+		}
+
+		if (audioManager == null)
+		{
+			audioManager = AudioManager.instance;
+		}
+
+		SetCurrentGameState (GameStateEnum.Menu);
+
+		SceneManager.sceneLoaded += OnNewScene;
+
+		audioManager.StartMusic ();
+	}
+
+	void OnDisable()
+	{
+		SceneManager.sceneLoaded -= OnNewScene;
+	}
+
+	void OnNewScene(Scene scene, LoadSceneMode mode)
+	{
+		switch (scene.buildIndex)
+		{
+
+		case 0:
+			SetCurrentGameState (GameStateEnum.Menu);
+			break;
+
+		default:
+			SetCurrentGameState (GameStateEnum.Initialised);
+			break;
+		}			
 	}
 
 	// Returns the current game state.
@@ -52,6 +90,11 @@ public class GameController : MonoBehaviour {
 	public void SetCurrentGameState(GameStateEnum newGameState)
 	{
 		gameState = newGameState;
+
+		if (OnGameStateChanged != null)
+		{
+			OnGameStateChanged (newGameState);
+		}
 	}
 
 	public bool HasInitialised()

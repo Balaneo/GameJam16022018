@@ -11,7 +11,7 @@ public class SliderScript : MonoBehaviour {
 	{
 		if (sliderValueText != null)
 		{
-			sliderValueText.text = Mathf.Round((newVolume * 100)).ToString() + "%";
+			sliderValueText.text = Mathf.Round(newVolume * 100).ToString() + "%";
 		}
 	}
 }

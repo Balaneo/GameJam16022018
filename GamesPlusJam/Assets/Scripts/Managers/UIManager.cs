@@ -56,6 +56,11 @@ public class UIManager : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
+		if (gameController == null)
+		{
+			gameController = GameController.instance;
+		}
+
 		SwitchScreen (currentScreen, UIScreensEnum.MainMenu);
 	}
 	
@@ -69,12 +74,15 @@ public class UIManager : MonoBehaviour {
 
 		if(Input.GetButtonDown("Pause"))
 		{
-			if(pauseCanvas.GetComponent<PauseManager>().isPaused())
+			if (gameController.GetCurrentGameState () > GameController.GameStateEnum.Initialised)
 			{
-				Unpause();
-			} else
-			{
-				Pause();
+				if(pauseCanvas.GetComponent<PauseManager>().isPaused())
+				{
+					Unpause();
+				} else
+				{
+					Pause();
+				}
 			}
 		}
 
@@ -216,6 +224,8 @@ public class UIManager : MonoBehaviour {
 		pauseCanvas.GetComponent<PauseManager> ().SetPause (false);
 		loadingCanvas.GetComponent<LoadingScreen> ().LoadNewScene (newScene);
 		SwitchScreen (currentScreen, UIScreensEnum.Loading);
+		gameController.SetCurrentGameState (GameController.GameStateEnum.Loading);
+
 	}
 
 	public void RemoveLoadingScreen()

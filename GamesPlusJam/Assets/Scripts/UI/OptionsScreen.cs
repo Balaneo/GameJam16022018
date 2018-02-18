@@ -9,6 +9,12 @@ public class OptionsScreen : MonoBehaviour {
 	public UIManager uiManager;
 	public AudioManager audioManager;
 
+	[Header("Audio Sliders")]
+	public Slider masterVolumeSlider;
+	public Slider musicVolumeSlider;
+	public Slider ambienceVolumeSlider;
+	public Slider effectsVolumeSlider;
+
 	//TODO: Sliders need updating on start, accessed from variables.
 
 	void Start()
@@ -22,25 +28,40 @@ public class OptionsScreen : MonoBehaviour {
 		{
 			audioManager = AudioManager.instance;
 		}
+
+		UpdateAudioSettings ();
 	}
 
-	public void SetMasterVolume(float newVolume)
+	public void UpdateAudioSettings ()
 	{
-		audioManager.SetMixerGroupVolume ("masterVolume", Mathf.Lerp(-80.0f, 0.0f, newVolume));
+		SetMasterVolume (audioManager.masterVolume);
+		SetMusicVolume (audioManager.musicVolume);
+		SetAmbienceVolume (audioManager.ambienceVolume);
+		SetEffectsVolume (audioManager.effectsVolume);
 	}
 
-	public void SetMusicVolume(float newVolume)
+
+	public void SetMasterVolume(float newValue)
 	{
-		audioManager.SetMixerGroupVolume ("musicVolume", Mathf.Lerp(-80.0f, 0.0f, newVolume));
+		audioManager.SetMasterVolume (newValue);
+		masterVolumeSlider.value = newValue;
 	}
 
-	public void SetAmbienceVolume(float newVolume)
+	public void SetMusicVolume(float newValue)
 	{
-		audioManager.SetMixerGroupVolume ("ambienceVolume", Mathf.Lerp(-80.0f, 0.0f, newVolume));
+		audioManager.SetMusicVolume (newValue);
+		musicVolumeSlider.value = newValue;
 	}
 
-	public void SetEffectsVolume(float newVolume)
+	public void SetAmbienceVolume(float newValue)
 	{
-		audioManager.SetMixerGroupVolume ("effectsVolume", Mathf.Lerp(-80.0f, 0.0f, newVolume));
+		audioManager.SetAmbienceVolume (newValue);
+		ambienceVolumeSlider.value = newValue;
+	}
+
+	public void SetEffectsVolume(float newValue)
+	{
+		audioManager.SetEffectsVolume (newValue);
+		effectsVolumeSlider.value = newValue;
 	}
 }
