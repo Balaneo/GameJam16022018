@@ -14,4 +14,4 @@ MonoBehaviour:
   itemName: Key
   itemDescription: This is a key.
   itemIcon: {fileID: 0}
-  itemConsumedOnUse: 0
+  itemCharge: 0

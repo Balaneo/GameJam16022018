@@ -12,14 +12,14 @@ public class PlayerInventoryEditor : Editor {
 	private SerializedProperty inventoryItemNamesProperty;
 	private SerializedProperty inventoryItemDescriptionsProperty;
 	private SerializedProperty inventoryItemImagesProperty;
-	private SerializedProperty inventoryItemConsumedOnUsesProperty;
+	private SerializedProperty iventoryItemChargesProperty;
 
 
 	private const string inventoryPropItems = "items";
 	private const string inventoryPropItemNames = "itemNames";
 	private const string inventoryPropItemDescriptions = "itemDescriptions";
 	private const string inventoryPropItemImages = "itemImages";
-	private const string inventoryPropItemConsumedOnUses = "itemConsumedOnUses";
+	private const string inventoryPropItemCharges = "itemCharges";
 
 
 	private void OnEnable()
@@ -28,7 +28,7 @@ public class PlayerInventoryEditor : Editor {
 		inventoryItemNamesProperty = serializedObject.FindProperty (inventoryPropItemNames);
 		inventoryItemDescriptionsProperty = serializedObject.FindProperty (inventoryPropItemDescriptions);
 		inventoryItemImagesProperty = serializedObject.FindProperty (inventoryPropItemImages);
-		inventoryItemConsumedOnUsesProperty = serializedObject.FindProperty (inventoryPropItemConsumedOnUses);
+		iventoryItemChargesProperty = serializedObject.FindProperty (inventoryPropItemCharges);
 	}
 
 	public override void OnInspectorGUI()
@@ -56,7 +56,7 @@ public class PlayerInventoryEditor : Editor {
 			EditorGUILayout.PropertyField (inventoryItemNamesProperty.GetArrayElementAtIndex (index));
 			EditorGUILayout.PropertyField (inventoryItemDescriptionsProperty.GetArrayElementAtIndex (index));
 			EditorGUILayout.PropertyField (inventoryItemImagesProperty.GetArrayElementAtIndex(index));
-			EditorGUILayout.PropertyField (inventoryItemConsumedOnUsesProperty.GetArrayElementAtIndex (index));
+			EditorGUILayout.PropertyField (iventoryItemChargesProperty.GetArrayElementAtIndex (index));
 
 		}
 

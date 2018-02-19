@@ -68,6 +68,8 @@ public class UIManager : MonoBehaviour {
 
 		GameController.OnGameStateChanged += CheckIfInitialised;
 
+		ResetAllScreens ();
+
 		SwitchScreen (currentScreen, UIScreensEnum.MainMenu);
 	}
 	
@@ -99,7 +101,6 @@ public class UIManager : MonoBehaviour {
 		}		
 	}
 
-
 	private void CheckIfInitialised(GameController.GameStateEnum newState)
 	{
 		if (newState == GameController.GameStateEnum.Initialised)
@@ -113,13 +114,21 @@ public class UIManager : MonoBehaviour {
 		SwitchScreen (currentScreen, UIScreensEnum.HUD);
 		gameController.SetCurrentGameState (GameController.GameStateEnum.BeforeTimer);
 	}
-
+		
+	private void ResetAllScreens()
+	{
+		SetScreenEnabled (fadeTransitionCanvas, false);
+		SetScreenEnabled (mainMenuCanvas, false);
+		SetScreenEnabled (optionsCanvas, false);
+		SetScreenEnabled (pauseCanvas, false);
+		SetScreenEnabled (loadingCanvas, false);
+		SetScreenEnabled (exitGame, false);
+		SetScreenEnabled (hudCanvas, false);
+	}
 
 	private void SetScreenEnabled(Canvas canvas, bool enabled)
 	{
-		canvas.GetComponent<CanvasGroup> ().alpha = enabled ? 1 : 0;
-		canvas.GetComponent<CanvasGroup> ().interactable = enabled;
-		canvas.GetComponent<CanvasGroup> ().blocksRaycasts = enabled;
+		canvas.enabled = enabled;
 	}
 
 	public void SwitchScreen (UIScreensEnum oldScreen, UIScreensEnum newScreen)

@@ -421,7 +421,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36e22fc26486aa34b855026e07bfb680, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destroyOnInteraction: 1
+  destroyOnSuccessfulInteraction: 1
+  requiredSuccessfulInteractions: 0
+  successfulInteractionsCounter: 0
   requiredItem: {fileID: 0}
   returnedItem: {fileID: 11400000, guid: b4865b92b1c8e234cb02b673c1c56908, type: 2}
 --- !u!1 &1760035350
@@ -536,7 +538,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36e22fc26486aa34b855026e07bfb680, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destroyOnInteraction: 1
+  destroyOnSuccessfulInteraction: 0
+  requiredSuccessfulInteractions: 3
+  successfulInteractionsCounter: 0
   requiredItem: {fileID: 11400000, guid: b4865b92b1c8e234cb02b673c1c56908, type: 2}
   returnedItem: {fileID: 11400000, guid: d8cb6306308fc004e804c2f8c12a8df5, type: 2}
 --- !u!23 &2003580087

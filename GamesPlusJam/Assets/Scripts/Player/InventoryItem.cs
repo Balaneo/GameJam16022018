@@ -14,6 +14,6 @@ public class InventoryItem : ScriptableObject {
 	[Tooltip("The image to use on the inventory slot UI in-game.")]
 	public Sprite itemIcon;
 
-	[Tooltip("Whether the item is consumed when it has been used.")]
-	public bool itemConsumedOnUse;
+	[Tooltip("How many uses the item can successfully have before it is used.")]
+	public int itemCharge;
 }

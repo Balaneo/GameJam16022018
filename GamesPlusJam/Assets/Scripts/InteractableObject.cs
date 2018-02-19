@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InteractableObject : MonoBehaviour {
 
-	public bool destroyOnInteraction;
+	public bool destroyOnSuccessfulInteraction;
 
 	public InventoryItem requiredItem;
 	public InventoryItem returnedItem;
@@ -20,12 +20,11 @@ public class InteractableObject : MonoBehaviour {
 		{			
 			if (player.GetComponent<PlayerInventory> ().CheckForItem (requiredItem))
 			{
-				if (requiredItem.itemConsumedOnUse)
-				{
-					player.GetComponent<PlayerInventory> ().RemoveItem (requiredItem);
-				}
+				player.GetComponent<PlayerInventory> ().UseItem (requiredItem);
+
 			} else
 			{
+				print ("This item requires a : " + requiredItem.name);
 				success = false;
 			}
 		}
@@ -40,7 +39,7 @@ public class InteractableObject : MonoBehaviour {
 			OnObjectInteraction (success);
 		}
 
-		if (success && destroyOnInteraction)
+		if (success && destroyOnSuccessfulInteraction)
 		{
 			Destroy (this.gameObject);
 		}

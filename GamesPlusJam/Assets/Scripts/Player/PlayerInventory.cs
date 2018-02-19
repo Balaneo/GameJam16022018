@@ -11,7 +11,7 @@ public class PlayerInventory : MonoBehaviour {
 	public string[] itemNames = new string[numInventorySlots];
 	public string[] itemDescriptions = new string[numInventorySlots];
 	public Image[] itemImages = new Image[numInventorySlots];
-	public bool[] itemConsumedOnUses = new bool[numInventorySlots];
+	public int[] itemCharges = new int[numInventorySlots];
 
 	public delegate void ItemAdded(InventoryItem newItem, int slotIndex);
 	public static event ItemAdded OnItemAdded;
@@ -48,7 +48,7 @@ public class PlayerInventory : MonoBehaviour {
 				itemNames [i] = newItem.itemName;
 				itemDescriptions [i] = newItem.itemDescription;
 				//itemImages [i].sprite = newItem.itemIcon;
-				itemConsumedOnUses [i] = newItem.itemConsumedOnUse;
+				itemCharges [i] = newItem.itemCharge;
 
 				if (OnItemAdded != null)
 				{
@@ -60,19 +60,40 @@ public class PlayerInventory : MonoBehaviour {
 		}
 	}
 
+	public void UseItem(InventoryItem itemToUse)
+	{
+		for (int i = 0; i < items.Length; i++)
+		{
+			if (items [i] == itemToUse)
+			{
+				
+				if (itemCharges [i] > 0)
+				{
+					itemCharges [i]--;
+					print ("Used item: " + items [i] + "!. Remaining charges: " + itemCharges [i]);
+
+					if (itemCharges [i] <= 0)
+					{
+						RemoveItem (itemToUse);
+					}
+				}
+			}
+		}
+	}
+
 	public void RemoveItem(InventoryItem itemToRemove)
 	{
 		for (int i = 0; i < items.Length; i++)
 		{
 			if (items [i] == itemToRemove)
 			{
-				print ("Player used the item: " + itemNames[i] + "! Removed from slot: " + i);
+				print ("Removed the item: " + itemNames[i] + "! Removed from slot: " + i);
 
 				items [i] = null;
 				itemNames [i] = null;
 				itemDescriptions [i] = null;
 				//itemImages [i].sprite = null;
-				itemConsumedOnUses [i] = false;
+				itemCharges [i] = 0;
 
 				if (OnItemRemoved != null)
 				{
